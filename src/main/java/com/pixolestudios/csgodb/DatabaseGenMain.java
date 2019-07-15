@@ -15,6 +15,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DatabaseGenMain {
 
@@ -27,12 +29,15 @@ public class DatabaseGenMain {
     private static String ftURLString;
     private static String wwURLString;
     private static String bsURLString;
+    private static String stashURLString;
 
     private static String fnOutStr;
     private static String mwOutStr;
     private static String ftOutStr;
     private static String wwOutStr;
     private static String bsOutStr;
+    private static String minFloatStr;
+    private static String maxFloatStr;
 
     private DatabaseGenMain() {
     }
@@ -56,7 +61,9 @@ public class DatabaseGenMain {
                 // Create a new SkinDBItem using the values provided in the .csv
                 line = reader.readLine();
 
-                System.out.print("Proocessing " + vals.get(0) + ":");
+                System.out.print("Processing " + vals.get(0) + ":");
+
+                setMinMaxFloats(vals.get(0));
 
                 fnURLString = getItemURLContents(vals.get(0) + " (Factory New)");
                 mwURLString = getItemURLContents(vals.get(0) + " (Minimal Wear)");
@@ -100,7 +107,7 @@ public class DatabaseGenMain {
                 }
                 System.out.println(" * ");
 
-                out.println(vals.get(0) + "," + vals.get(1) + "," + vals.get(2) + "," + vals.get(3) + "," + vals.get(4) + "," + fnOutStr + "," + mwOutStr + "," + ftOutStr + "," + wwOutStr + "," + bsOutStr + ",0,0,0,0,0");
+                out.println(vals.get(0) + "," + minFloatStr + "," + maxFloatStr + "," + vals.get(3) + "," + vals.get(4) + "," + fnOutStr + "," + mwOutStr + "," + ftOutStr + "," + wwOutStr + "," + bsOutStr + ",0,0,0,0,0");
                 out.flush();
             }
             reader.close();
@@ -121,6 +128,32 @@ public class DatabaseGenMain {
             e.printStackTrace();
         }
         return Utils.URLContentstoString("http://csgobackpack.net/api/GetItemPrice/?id=" + url);
+    }
+
+    private static void setMinMaxFloats(String itemName) {
+        String url = null;
+        try {
+            url = URLEncoder.encode(itemName, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        url = url.replaceAll("\\+", "%20");
+        stashURLString = Utils.URLContentstoString("https://csgoitems.pro/en/skin/" + url);
+        Pattern MY_PATTERN = Pattern.compile("<div class=\"[^\"]*?tooltip top[^\"]*?\">(.*?)</div>");
+
+        Matcher m = MY_PATTERN.matcher(stashURLString);
+        m.find();
+        minFloatStr = m.group(1);
+        // Remove the % sign
+        minFloatStr = minFloatStr.substring(0, minFloatStr.length() - 1);
+        m.find();
+        maxFloatStr = m.group(1);
+        // Remove the % sign
+        maxFloatStr = maxFloatStr.substring(0, maxFloatStr.length() - 1);
+
+        //Divide by 100 to get float
+        minFloatStr = String.valueOf(Float.valueOf(minFloatStr) / 100);
+        maxFloatStr = String.valueOf(Float.valueOf(maxFloatStr) / 100);
     }
 
 
