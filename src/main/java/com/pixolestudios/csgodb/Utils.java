@@ -31,7 +31,7 @@ public class Utils {
             in.close();
             return fileString;
         } catch (IOException e) {
-            System.out.println("No data found for that STEAMID");
+            System.out.println("No data found for that URL");
             return null;
         }
     }
