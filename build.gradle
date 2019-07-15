@@ -33,14 +33,10 @@ jar {
         attributes 'Main-Class': 'main.java.com.pixolestudios.csgodb.DatabaseGenMain'
     }
 }
-//dependencies {
-//    testCompile 'junit:junit:4.12'
-//    compile 'junit:junit:4.12'
-//    compile name : 'plogger-1.1.0-alpha'
-//}
-//repositories {
-//    mavenCentral()
-//    flatDir {
-//        dirs 'src/libs'
-//    }
-//}
+dependencies {
+    testCompile group: 'org.json', name: 'json', version: '20090211'
+    compile group: 'org.json', name: 'json', version: '20090211'
+}
+repositories {
+    mavenCentral()
+}
