@@ -56,6 +56,7 @@ public class DatabaseGenMain {
                 // Create a new SkinDBItem using the values provided in the .csv
                 line = reader.readLine();
 
+                System.out.print("Proocessing " + vals.get(0) + ":");
 
                 fnURLString = getItemURLContents(vals.get(0) + " (Factory New)");
                 mwURLString = getItemURLContents(vals.get(0) + " (Minimal Wear)");
@@ -69,34 +70,38 @@ public class DatabaseGenMain {
                     JSONObject jo = new JSONObject(fnURLString);
                     fnOutStr = (String) jo.get("average_price");
                 }
+                System.out.print(" * ");
                 if (mwURLString.equals("{\"success\":\"false\"}")) {
                     mwOutStr = "0.0";
                 } else {
                     JSONObject jo = new JSONObject(mwURLString);
                     mwOutStr = (String) jo.get("average_price");
                 }
+                System.out.print(" * ");
                 if (ftURLString.equals("{\"success\":\"false\"}")) {
                     ftOutStr = "0.0";
                 } else {
                     JSONObject jo = new JSONObject(ftURLString);
                     ftOutStr = (String) jo.get("average_price");
                 }
+                System.out.print(" * ");
                 if (wwURLString.equals("{\"success\":\"false\"}")) {
                     wwOutStr = "0.0";
                 } else {
                     JSONObject jo = new JSONObject(wwURLString);
                     wwOutStr = (String) jo.get("average_price");
                 }
+                System.out.print(" * ");
                 if (bsURLString.equals("{\"success\":\"false\"}")) {
                     bsOutStr = "0.0";
                 } else {
                     JSONObject jo = new JSONObject(bsURLString);
                     bsOutStr = (String) jo.get("average_price");
                 }
-                System.out.println("=========");
+                System.out.println(" * ");
 
                 out.println(vals.get(0) + "," + vals.get(1) + "," + vals.get(2) + "," + vals.get(3) + "," + vals.get(4) + "," + fnOutStr + "," + mwOutStr + "," + ftOutStr + "," + wwOutStr + "," + bsOutStr + ",0,0,0,0,0");
-                out.close();
+                out.flush();
             }
             reader.close();
         } catch (FileNotFoundException e) {
